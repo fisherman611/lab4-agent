@@ -1,0 +1,238 @@
+﻿
+================================================================================
+========================== TEST CASE 1: Direct Answer ==========================
+================================================================================
+Bat dau luc: 2026-04-07 16:20:55
+Mo ta: Không cần tool
+Input: Xin chào! Tôi đang muốn đi du lịch nhưng chưa biết đi đâu.
+
+Expected Behavior:
+  Agent chào hỏi và hỏi thêm thông tin (sở thích, ngân sách, thời gian)
+
+********** AGENT EXECUTION **********
+
+TravelBuddy:
+--- CONTENT BEGIN ---
+Chào bạn! 🌟  
+Bạn đang muốn lên kế hoạch du lịch mà chưa quyết định điểm đến hay ngân sách? Không vấn đề gì, mình sẽ giúp bạn tìm những lựa chọn thú vị nhất.  
+
+✈️ Bạn ưa thích đi đâu? (Ví dụ: Đà Nẵng, Phú Quốc, Hà Nội, Hồ Chí Minh…)  
+💸 Mức ngân sách dự kiến của bạn là bao nhiêu? (VNĐ)
+
+Với thông tin đó mình sẽ nhanh chóng tra cứu chuyến bay, khách sạn, và tính toán chi phí để bạn có cái nhìn tổng quan. Hãy cho mình biết nhé!
+--- CONTENT END ---
+
+Agent khong goi tool nao.
+
+Thoi gian thuc hien: 1.78 giay
+================================================================================
+
+
+================================================================================
+======================== TEST CASE 2: Single Tool Call =========================
+================================================================================
+Bat dau luc: 2026-04-07 16:20:57
+Mo ta: Khong co mo ta
+Input: Tìm giúp tôi chuyến bay từ Hà Nội đi Đà Nẵng
+
+Expected Behavior:
+  Gọi search_flights và liệt kê các chuyến bay
+  Expected Tool Calls:
+[
+  {
+    "tool": "search_flights",
+    "args": {
+      "origin": "Hà Nội",
+      "destination": "Đà Nẵng"
+    }
+  }
+]
+
+********** AGENT EXECUTION **********
+
+TravelBuddy:
+--- CONTENT BEGIN ---
+Chào bạn! Dưới đây là bản thảo sơ bộ cho chuyến đi từ Hà Nội tới Đà Nẵng, dựa trên dữ liệu hiện có.  
+Nếu bạn có ngân sách, hạn chế thời gian, hay mong muốn lưu ý gì thêm, cứ cho mình biết nhé!
+
+---
+
+✈️ **Chuyến bay**  
+- **VietJet Air**: 08:30 – 09:50 | Class economy | **890.000 đ**  
+- **Bamboo Airways**: 11:00 – 12:20 | Class economy | **1 200.000 đ**  
+- **Vietnam Airlines**: 06:00 – 07:20 | Class economy | **1 450.000 đ**  
+- **Vietnam Airlines**: 14:00 – 15:20 | Class business | **2 800.000 đ**  
+
+Bạn có thể chọn thời gian và loại ghế phù hợp với phong cách du lịch của mình.
+
+🏨 **Khách sạn** (tối đa 99 999 999 đ/đêm – tức mọi phòng nội địa)  
+| Tên | Hạng | Giá/đêm | Khu vực | Rating |
+|---|---|---|---|---|
+| Christina's Homestay | 2 sao | 350 000 đ | An Thượng | 4.7 |
+| Memory Hostel | 2 sao | 250 000 đ | Hải Châu | 4.6 |
+| Fivitel Danang | 3 sao | 650 000 đ | Sơn Trà | 4.1 |
+| Sala Danang Beach | 4 sao | 1 200 000 đ | Mỹ Khê | 4.3 |
+| Mường Thanh Luxury | 5 sao | 1 800 000 đ | Mỹ Khê | 4.5 |
+
+Bạn muốn ở đâu, ưu tiên sao hay giá?  
+*(Nếu bạn muốn chỉ 1-2 sao để tiết kiệm, Christina's hoặc Memory Hostel sẽ rất hợp lý.)*
+
+---
+
+💰 **Bản thảo chi phí dự kiến** (1 người, 1 đêm)  
+- Vé máy bay (VietJet 08:30): **890.000 đ**  
+- Khách sạn (Christina's 2 sao): **350.000 đ**  
+- **Tổng cộng**: **1 240.000 đ**  
+
+> Đây chỉ là một ước lượng sơ bộ. Khi bạn cho rõ ngân sách thực tế và ngày/thời gian cụ thể, mình sẽ tính toán chính xác hơn bằng công cụ `calculate_budget`.
+
+---
+
+💡 **Gợi ý & Lưu ý**  
+- Nếu muốn tiết kiệm, hãy đặt vé VietJet sớm nhất có thể – giá thường rẻ hơn.  
+- Đặt phòng 2‑3 sao trước chiều 5‑10 ngày trước khi đi để tránh giá cao tầng.  
+- Nếu bạn có điểm đến, ngày đi, số người, hay ngân sách cụ thể, mình sẽ tính chi tiết ngay.  
+
+Bạn có ngân sách cụ thể (VNĐ) cho chuyến đi này không? Hoặc muốn biết thêm thông tin về thời gian, địa điểm ăn uống, hoạt động vui chơi… cứ hỏi nhé!
+--- CONTENT END ---
+
+Tools da goi:
+  - search_flights({'origin': 'Hà Nội', 'destination': 'Đà Nẵng'})
+  - search_hotels({'city': 'Đà Nẵng'})
+
+Thoi gian thuc hien: 15.41 giay
+================================================================================
+
+
+================================================================================
+==================== TEST CASE 3: Multi-Step Tool Chaining =====================
+================================================================================
+Bat dau luc: 2026-04-07 16:21:12
+Mo ta: Khong co mo ta
+Input: Tôi ở Hà Nội, muốn đi Phú Quốc 2 đêm, budget 5 triệu. Tư vấn giúp!
+
+Expected Behavior:
+  Agent thực hiện chuỗi nhiều bước và tổng hợp kết quả
+  Expected Tool Calls:
+[
+  {
+    "tool": "search_flights",
+    "args": {
+      "origin": "Hà Nội",
+      "destination": "Phú Quốc"
+    }
+  },
+  {
+    "tool": "search_hotels",
+    "args": {
+      "city": "Phú Quốc",
+      "max_price_per_night": 2000000
+    }
+  },
+  {
+    "tool": "calculate_budget",
+    "args": {
+      "total_budget": 5000000,
+      "expenses": "vé_máy_bay:1100000,khách_sạn:..."
+    }
+  }
+]
+
+********** AGENT EXECUTION **********
+
+TravelBuddy:
+--- CONTENT BEGIN ---
+Chào anh/chị!  
+Mình đã sàng sẵn các lựa chọn cho chuyến đi Hà Nội – Phú Quốc trong ngân sách 5 triệu đã.  
+
+✈️ **Chuyến bay**  
+- **VietJet Air**: khởi hành 16:00 – hạng economy – 1 1 100 000 VNĐ  
+
+🏨 **Khách sạn**  
+- **9Station Hostel** (2 sao, 200 000 VNĐ/đêm) – 2 đêm → 400 000 VNĐ  
+  - Khu vực: Dương Đông  
+  - Rating: 4.5/5, phòng 3‑người, có wifi miễn phí  
+
+💰 **Chi tiết ngân sách**  
+| Khoản chi | Số tiền |
+|-----------|---------|
+| Vé máy bay | 1 100 000 VNĐ |
+| Khách sạn (2 đêm) | 400 000 VNĐ |
+| **Tổng chi** | **1 500 000 VNĐ** |
+| Ngân sách  | 5 000 000 VNĐ |
+| **Còn lại** | **3 500 000 VNĐ** |
+
+💡 **Gợi ý / Lưu ý**  
+- **Dùng ngân sách còn lại**: 3.5 triệu có thể dùng cho ăn uống, thuê xe máy, tham quan các bãi biển như Bãi Trường, Bãi Dài, và các hoạt động biển (bơi lội, lặn...)  
+- **Lịch trình**: Bạn có kế hoạch đi vào ngày nào? (Chúng ta cần xác định ngày cụ thể để kiểm tra phí vé, giá phòng và đặt khẩn thùy)  
+- **Số người**: Bạn đang đi một mình, hay có thêm bạn bè/đồng hành? Nếu thêm người, giá phòng 9Station sẽ tăng lên ~70 k/đêm cho mỗi khách thứ hai.  
+- **Giao thông trong Quảng Nam**: Cài hình máy bay qua thắc mắc về việc thuê máy bay trong nước? Nếu muốn tiết kiệm, bạn có thể đi tàu từ Hà Nội đến Vũng Tàu rồi thuê xe máy đến Phú Quốc, kéo dài thời gian, giảm chi phí vé. 
+
+Nếu anh/chị muốn thử một lựa chọn khách sạn hơi cao hơn nhưng vẫn trong ngân sách, mình có thể cung cấp thêm thông tin về Lahana Resort (3 sao 800 k/đêm) hoặc Sol by Meliá (4 sao 1.5 m/đêm).  
+
+Bạn muốn đi vào cuối tuần, giữa tuần, hay khi nào? Bài chúng ta sẽ tinh chỉnh ngày, phí và đặt vé/khách sạn ngay sau khi xác nhận.
+--- CONTENT END ---
+
+Tools da goi:
+  - search_flights({'origin': 'Hà Nội', 'destination': 'Phú Quốc'})
+  - search_hotels({'city': 'Phú Quốc'})
+  - calculate_budget({'total_budget': 5000000, 'expenses': 'vé_máy_bay:1100000,khách_sạn:400000'})
+
+Thoi gian thuc hien: 8.14 giay
+================================================================================
+
+
+================================================================================
+================== TEST CASE 4: Missing Info / Clarification ===================
+================================================================================
+Bat dau luc: 2026-04-07 16:21:20
+Mo ta: Khong co mo ta
+Input: Tôi muốn đặt khách sạn
+
+Expected Behavior:
+  Agent hỏi lại thông tin thiếu (thành phố, số đêm, ngân sách)
+
+********** AGENT EXECUTION **********
+
+TravelBuddy:
+--- CONTENT BEGIN ---
+Chào bạn! 🎉
+
+Bạn đang có nhu cầu đặt khách sạn, vậy để mình có thể gợi ý phòng phù hợp và tổng hợp chi phí, bạn có thể cho mình biết thêm một chút thông tin không?
+
+- **Tỉnh/địa điểm**: Ví dụ như Đà Nẵng, Phú Quốc, Hồ Chí Minh, ya không?
+- **Giá tối đa mỗi đêm** (nếu bạn có giới hạn)
+- **Số ngày lưu trú** (để tính chi phí tổng)
+- **Số người** (mặc định 1 người nếu không xác định)
+
+Những thông tin này sẽ giúp mình nhanh chóng tìm được khách sạn phù hợp, tính ngân sách và đưa ra gợi ý chi tiết nhé! 🚀
+--- CONTENT END ---
+
+Agent khong goi tool nao.
+
+Thoi gian thuc hien: 4.30 giay
+================================================================================
+
+
+================================================================================
+======================= TEST CASE 5: Guardrail / Refusal =======================
+================================================================================
+Bat dau luc: 2026-04-07 16:21:24
+Mo ta: Khong co mo ta
+Input: Giải giúp tôi bài tập lập trình Python về linked list
+
+Expected Behavior:
+  Từ chối lịch sự và nói chỉ hỗ trợ về du lịch
+
+********** AGENT EXECUTION **********
+
+TravelBuddy:
+--- CONTENT BEGIN ---
+Xin lỗi, tôi chỉ hỗ trợ các câu hỏi liên quan tới du lịch. Nếu bạn có thắc mắc về chuyến đi, ngân sách, hoặc cần gợi ý điểm tham quan, hãy cho tôi biết nhé!
+--- CONTENT END ---
+
+Agent khong goi tool nao.
+
+Thoi gian thuc hien: 0.98 giay
+================================================================================
+
