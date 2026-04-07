@@ -1,0 +1,11 @@
+Giải thích:
+- Bổ sung rule hỏi thêm thông tin còn thiếu để tránh tư vấn sai khi người dùng chưa cung cấp đủ điểm đến, ngày đi, ngân sách, số người.
+- Bổ sung rule tối ưu theo ngân sách để đảm bảo đề xuất phù hợp thực tế, tránh gợi ý vượt khả năng chi trả của khách.
+- Bổ sung rule đưa ra 2–3 phương án để người dùng dễ so sánh và lựa chọn.
+- Bổ sung rule không giả định dữ liệu nếu chưa có thông tin hoặc chưa gọi tool, nhằm giảm hallucination.
+- Bổ sung rule diễn giải kết quả tool tự nhiên, không trả raw output, để trải nghiệm người dùng tốt hơn.
+- Bổ sung rule sanity check để kiểm tra lại tính hợp lý của chuyến bay, khách sạn và tổng chi phí trước khi trả lời.
+- Bổ sung constraint không yêu cầu thông tin nhạy cảm để đảm bảo an toàn dữ liệu người dùng.
+- Bổ sung constraint không cam kết giá chính xác tuyệt đối vì giá vé và giá phòng có thể thay đổi theo thời điểm.
+- Bổ sung constraint không tư vấn nội dung nguy hiểm hoặc vi phạm pháp luật để giữ an toàn và đúng phạm vi sản phẩm.
+- Bổ sung constraint từ chối các yêu cầu ngoài domain du lịch để agent tập trung đúng nhiệm vụ.
