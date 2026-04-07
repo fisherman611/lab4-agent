@@ -59,15 +59,12 @@ Sử dụng script `run_agent.py` để kiểm tra khả năng phản hồi củ
 .\env\Scripts\python.exe run_agent.py --all --output log_tests.txt
 ```
 
-### 2. Chạy Giao diện Web (Streamlit)
-Để trải nghiệm cảm giác chat thực tế:
+### 2. Chạy Giao diện Web (Gradio)
+Để trải nghiệm cảm giác chat thực tế và triển khai lên Hugging Face Spaces:
 
 ```powershell
-.\env\Scripts\streamlit.exe run streamlit_app.py
+.\env\Scripts\python.exe app.py
 ```
 
 ## 🧪 Kịch bản kiểm thử (Test Cases)
 Project đi kèm với 8 kịch bản kiểm thử tiêu biểu trong `tests/test_cases.json`, từ các câu hỏi đơn giản, yêu cầu trọn gói, cho đến các trường hợp từ chối yêu cầu ngoài phạm vi du lịch.
-
----
-*Phát triển bởi đội ngũ TravelBuddy AI – Giải pháp du lịch thông minh thế hệ mới.*
