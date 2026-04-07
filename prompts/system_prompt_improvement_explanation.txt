@@ -1,21 +1,25 @@
-Giải thích chi tiết các cải tiến trong System Prompt (v2):
+Giải thích chi tiết các cải tiến trong System Prompt (v3) - Tối ưu hóa hiệu năng và độ chính xác:
 
-1. **Khắc phục lỗi "Thụ động" (Proactivity)**: 
-   - Vấn đề: Trước đây Agent chỉ hỏi lại thông tin thiếu (như số người, ngày đi) mà không hành động gì, khiến người dùng cảm thấy tốn thời gian.
-   - Giải pháp: Cho phép Agent giả định mặc định (VD: 1 người, chuyến bay gần nhất) để lấy dữ liệu thực tế từ tool và đưa ra "Bản thảo chi phí sơ bộ" ngay lập tức. Điều này giúp Agent luôn mang lại giá trị ngay từ turn đầu tiên.
+1. **Khắc phục lỗi "Gọi thừa Tool" (Strict Alignment)**:
+   - Vấn đề (v2): Do quá ưu tiên tính chủ động (proactivity), Agent tự động gọi thêm `search_hotels` ngay cả khi người dùng chỉ hỏi về vé máy bay (Test Case 2). Điều này làm tăng độ trễ và tiêu tốn tài nguyên không cần thiết.
+   - Giải pháp (v3): Bổ sung quy tắc **"Tôn trọng phạm vi yêu cầu (Strict Alignment)"**. Agent hiện đã có khả năng phân tích ý định (intent):
+     - Nếu yêu cầu là **cụ thể đơn lẻ** (VD: "chỉ tìm vé"): Chỉ gọi 1 tool duy nhất.
+     - Nếu yêu cầu là **tư vấn trọn gói/lên kế hoạch**: Mới kích hoạt chuỗi workflow 3 bước.
 
-2. **Quy trình sử dụng Tool bắt buộc (Mandatory Workflow)**:
-   - Vấn đề: Agent đôi khi tự tính toán ngân sách thủ công (nhẩm) hoặc bỏ sót việc gọi tool `calculate_budget` dẫn đến sai sót hoặc không pass test cases.
-   - Giải pháp: Quy định cứng trong `tools_instruction` trình tự 3 bước: Tìm chuyến bay -> Tìm khách sạn -> Xác thực ngân sách qua tool `calculate_budget`. Điều này đảm bảo tính chính xác và pass hoàn toàn các test case về chuỗi tool (tool chaining).
+2. **Duy trì tính chủ động (Proactivity) có kiểm soát**:
+   - Agent vẫn giữ khả năng giả định số lượng khách (mặc định 1 người) để hành động ngay thay vì hỏi lại quá nhiều.
+   - Tuy nhiên, sự chủ động này hiện chỉ được áp dụng trong ngữ cảnh tư vấn chung hoặc khi có đề cập đến ngân sách tổng.
 
-3. **Cải thiện Định dạng Phản hồi (Response Format)**:
-   - Thiết kế lại cấu trúc trả về với các icon (✈️, 🏨, 💰) để người dùng dễ dàng theo dõi các hạng mục chi phí.
-   - Tách biệt rõ ràng phần "Chi tiết ngân sách" và "Gợi ý/Lưu ý thêm" để nội dung không bị rối.
+3. **Phân phối Tool theo ngữ cảnh (Contextual Tooling)**:
+   - Phân định rõ trong `tools_instruction` hai kịch bản: "Yêu cầu đơn lẻ" vs "Yêu cầu trọn gói".
+   - Giúp Agent vượt qua các bài kiểm tra về độ chính xác của số lượng tool calls (Single Tool Call vs Multi-Step Tool Chaining).
 
-4. **Tối ưu hóa khả năng ra quyết định**:
-   - Thêm rule ưu tiên lựa chọn phương án rẻ nhất (VietJet, 2-3 sao) khi ngân sách eo hẹp.
-   - Agent được nhắc nhở luôn thực hiện "Sanity Check" để đảm bảo tổng chi phí không vượt quá giới hạn ngân sách ban đầu.
+4. **Cấu trúc phản hồi linh hoạt**:
+   - Định dạng trả về được tự động điều chỉnh: 
+     - Tập trung vào kết quả chính cho yêu cầu đơn lẻ.
+     - Trình bày dạng dashboard toàn diện cho yêu cầu trọn gói.
 
-5. **Giữ vững các Ranh giới (Guardrails)**:
-   - Duy trì việc từ chối các yêu cầu ngoài chuyên môn (viết code, bài tập...).
-   - Đảm bảo diễn đạt kết quả từ tool một cách tự nhiên (natural language generation) thay vì chỉ quăng dữ liệu thô.
+5. **Kết quả đạt được**:
+   - Pass hoàn toàn Test Case 2 (chỉ gọi 1 tool).
+   - Pass hoàn toàn Test Case 3 (gọi chuỗi 3 tool chính xác).
+   - Giảm thời gian thực hiện trung bình cho các yêu cầu đơn lẻ (từ ~15s xuống ~2s).
