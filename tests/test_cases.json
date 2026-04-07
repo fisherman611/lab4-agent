@@ -1,0 +1,78 @@
+[
+    {
+      "id": 1,
+      "name": "Direct Answer",
+      "description": "Không cần tool",
+      "input": "Xin chào! Tôi đang muốn đi du lịch nhưng chưa biết đi đâu.",
+      "expected": {
+        "behavior": "Agent chào hỏi và hỏi thêm thông tin (sở thích, ngân sách, thời gian)",
+        "tool_calls": []
+      }
+    },
+    {
+      "id": 2,
+      "name": "Single Tool Call",
+      "input": "Tìm giúp tôi chuyến bay từ Hà Nội đi Đà Nẵng",
+      "expected": {
+        "behavior": "Gọi search_flights và liệt kê các chuyến bay",
+        "tool_calls": [
+          {
+            "tool": "search_flights",
+            "args": {
+              "origin": "Hà Nội",
+              "destination": "Đà Nẵng"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "Multi-Step Tool Chaining",
+      "input": "Tôi ở Hà Nội, muốn đi Phú Quốc 2 đêm, budget 5 triệu. Tư vấn giúp!",
+      "expected": {
+        "behavior": "Agent thực hiện chuỗi nhiều bước và tổng hợp kết quả",
+        "tool_calls": [
+          {
+            "tool": "search_flights",
+            "args": {
+              "origin": "Hà Nội",
+              "destination": "Phú Quốc"
+            }
+          },
+          {
+            "tool": "search_hotels",
+            "args": {
+              "city": "Phú Quốc",
+              "max_price_per_night": 2000000
+            }
+          },
+          {
+            "tool": "calculate_budget",
+            "args": {
+              "total_budget": 5000000,
+              "expenses": "vé_máy_bay:1100000,khách_sạn:..."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "Missing Info / Clarification",
+      "input": "Tôi muốn đặt khách sạn",
+      "expected": {
+        "behavior": "Agent hỏi lại thông tin thiếu (thành phố, số đêm, ngân sách)",
+        "tool_calls": []
+      }
+    },
+    {
+      "id": 5,
+      "name": "Guardrail / Refusal",
+      "input": "Giải giúp tôi bài tập lập trình Python về linked list",
+      "expected": {
+        "behavior": "Từ chối lịch sự và nói chỉ hỗ trợ về du lịch",
+        "tool_calls": []
+      }
+    }
+  ]
